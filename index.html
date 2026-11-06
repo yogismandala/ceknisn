@@ -6,6 +6,27 @@
     <title>Cek NISN</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* ====== GANTI WARNA DI SINI SAJA (samakan dengan halaman login) ====== */
+        :root {
+            --bg-1: #003300;          /* banner hijau: atas */
+            --bg-2: #006400;          /* banner hijau: bawah */
+            --tinggi-banner: 300px;   /* tinggi area hijau di atas */
+            --card-bg: #ffffff;
+            --judul: #14532d;
+            --teks-sub: #6b7280;
+            --aksen: #16a34a;         /* tombol utama & fokus input */
+            --aksen-hover: #15803d;
+            --aksen-disabled: #86efac;
+            --border-input: #e0e0e0;
+            --sukses-bg: #f0fdf4;
+            --sukses-border: #bbf7d0;
+            --sukses-teks: #166534;
+            --gagal-bg: #fef2f2;
+            --gagal-border: #fecaca;
+            --gagal-teks: #991b1b;
+        }
+        /* ==================================================================== */
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,16 +35,47 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            background-color: #ffffff;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
+            padding: 150px 20px 40px;
             color: #333;
+            position: relative;
+        }
+
+        /* Banner hijau bermotif grid di bagian atas, sisanya putih */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--tinggi-banner);
+            z-index: 0;
+            background:
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0 1px, transparent 1px 40px),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 1px, transparent 1px 40px),
+                radial-gradient(ellipse at 50% 55%, rgba(110,190,110,0.45) 0%, rgba(110,190,110,0) 65%),
+                linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+        }
+
+        .logo {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            z-index: 1;
         }
 
         .card {
-            background-color: #ffffff;
+            position: relative;
+            z-index: 1;
+            background-color: var(--card-bg);
             width: 100%;
             max-width: 400px;
             padding: 40px 30px;
@@ -34,13 +86,13 @@
 
         .card h2 {
             margin-bottom: 10px;
-            color: #2c3e50;
+            color: var(--judul);
             font-weight: 600;
         }
 
         .card p.subtitle {
             font-size: 14px;
-            color: #7f8c8d;
+            color: var(--teks-sub);
             margin-bottom: 25px;
         }
 
@@ -48,7 +100,7 @@
             width: 100%;
             padding: 12px 15px;
             margin-bottom: 20px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-input);
             border-radius: 8px;
             font-size: 16px;
             outline: none;
@@ -56,28 +108,30 @@
         }
 
         input[type="text"]:focus {
-            border-color: #667eea;
+            border-color: var(--aksen);
         }
 
-        button {
+        button, a.btn {
+            display: block;
             width: 100%;
             padding: 12px;
-            background-color: #667eea;
+            background-color: var(--aksen);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            text-decoration: none;
             transition: background-color 0.3s, transform 0.1s;
         }
 
-        button:hover {
-            background-color: #5a6fd6;
+        button:hover, a.btn:hover {
+            background-color: var(--aksen-hover);
         }
 
         button:disabled {
-            background-color: #a5b4fc;
+            background-color: var(--aksen-disabled);
             cursor: not-allowed;
         }
 
@@ -87,29 +141,35 @@
         }
 
         .hasil-sukses {
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
+            background-color: var(--sukses-bg);
+            border: 1px solid var(--sukses-border);
             padding: 15px;
             border-radius: 8px;
             text-align: left;
-            color: #166534;
+            color: var(--sukses-teks);
         }
 
         .hasil-sukses p {
             margin: 5px 0;
+            word-break: break-word;
+        }
+
+        .hasil-sukses a.btn {
+            margin-top: 15px;
+            text-align: center;
         }
 
         .hasil-gagal {
-            background-color: #fef2f2;
-            border: 1px solid #fecaca;
+            background-color: var(--gagal-bg);
+            border: 1px solid var(--gagal-border);
             padding: 15px;
             border-radius: 8px;
-            color: #991b1b;
+            color: var(--gagal-teks);
             font-size: 14px;
         }
-        
+
         .loading {
-            color: #667eea;
+            color: var(--aksen);
             font-size: 14px;
             font-weight: 600;
         }
@@ -117,10 +177,12 @@
 </head>
 <body>
 
+    <img class="logo" id="logo" alt="Logo YSM" style="display:none">
+
     <div class="card">
         <h2>Cek NISN</h2>
         <p class="subtitle">Masukkan nama lengkap untuk melihat NISN</p>
-        
+
         <input type="text" id="inputNama" placeholder="Contoh: Yogi Satria Mandala" autocomplete="off">
         <button id="btnCari" onclick="cariNISN()">Lihat Hasil</button>
 
@@ -128,35 +190,56 @@
     </div>
 
     <script>
-        // ISI DENGAN URL GOOGLE APPS SCRIPT ANDA YANG DISALIN PADA LANGKAH 3
         const URL_API = "https://script.google.com/macros/s/AKfycbyBwNo5Clsy8DtkFQhEZ7GJeRfCcEjb2OpAeLA5-V18H2djBhM7-8OTvRryMlqmJUxO/exec";
+        const URL_LOGIN = "https://ysm-exam.pages.dev/";
+
+        // TEMPELKAN LINK FOTO LOGO DI SINI (contoh: "https://domain.com/logo.png")
+        const URL_LOGO = "https://i.ibb.co.com/pjPcR7fC/Kom.png";
+
+        (function () {
+            const img = document.getElementById('logo');
+            if (!URL_LOGO) return;
+            img.onload = function () { img.style.display = 'block'; };
+            img.onerror = function () { img.style.display = 'none'; };
+            img.src = URL_LOGO;
+        })();
+
+        function esc(teks) {
+            const d = document.createElement('div');
+            d.textContent = teks == null ? "-" : String(teks);
+            return d.innerHTML;
+        }
+
+        document.getElementById('inputNama').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') cariNISN();
+        });
 
         async function cariNISN() {
             const input = document.getElementById('inputNama').value;
             const tempatHasil = document.getElementById('hasil');
             const tombol = document.getElementById('btnCari');
-            
-            if(input.trim() === "") {
+
+            if (input.trim() === "") {
                 tempatHasil.style.display = "block";
                 tempatHasil.innerHTML = `<div class="hasil-gagal">Silakan masukkan nama terlebih dahulu!</div>`;
                 return;
             }
 
-            // Tampilkan status loading dan matikan tombol sementara
             tempatHasil.style.display = "block";
             tempatHasil.innerHTML = `<div class="loading">Sedang mencari data...</div>`;
             tombol.disabled = true;
 
             try {
-                // Mengirim permintaan ke Google Sheets secara real-time
                 const tanggapan = await fetch(`${URL_API}?nama=${encodeURIComponent(input)}`);
                 const hasilJson = await tanggapan.json();
 
                 if (hasilJson.status === "sukses") {
                     tempatHasil.innerHTML = `
                         <div class="hasil-sukses">
-                            <p><strong>Nama:</strong> ${hasilJson.data.nama}</p>
-                            <p><strong>NISN:</strong> ${hasilJson.data.nisn}</p>
+                            <p><strong>Nama:</strong> ${esc(hasilJson.data.nama)}</p>
+                            <p><strong>NISN:</strong> ${esc(hasilJson.data.nisn)}</p>
+                            <p><strong>Password:</strong> ${esc(hasilJson.data.password)}</p>
+                            <a class="btn" href="${URL_LOGIN}">Kembali Login</a>
                         </div>
                     `;
                 } else {
@@ -174,7 +257,6 @@
                     </div>
                 `;
             } finally {
-                // Aktifkan kembali tombol cari
                 tombol.disabled = false;
             }
         }
